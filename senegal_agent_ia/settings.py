@@ -144,8 +144,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# Configuration pour Render
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# Configuration pour Render - STATIC_ROOT est obligatoire pour collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
