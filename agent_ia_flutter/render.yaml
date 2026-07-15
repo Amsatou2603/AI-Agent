@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: agent-ia-flutter-web
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: API_URL
+        value: https://senegal-agent-ia-api.onrender.com
+        # À remplacer par l'URL réelle de votre backend après déploiement

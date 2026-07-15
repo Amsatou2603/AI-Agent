@@ -88,12 +88,24 @@ WSGI_APPLICATION = "senegal_agent_ia.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+import dj_database_url
+
+# Utiliser PostgreSQL sur Render, SQLite en local
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get("DATABASE_URL"),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -132,6 +144,9 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# Configuration pour Render - STATIC_ROOT est obligatoire pour collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -146,8 +161,13 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 
+# Ajouter les origines Render depuis les variables d'environnement
+render_origins = os.environ.get("CORS_ALLOWED_ORIGINS", "")
+if render_origins:
+    CORS_ALLOWED_ORIGINS.extend([origin.strip() for origin in render_origins.split(",")])
+
 # Accepter toutes les origines en développement (à retirer en production)
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = os.environ.get("DEBUG", "True") == "True"
 
 CORS_ALLOW_METHODS = [
     "DELETE",
