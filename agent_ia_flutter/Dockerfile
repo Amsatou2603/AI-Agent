@@ -19,6 +19,10 @@ ENV FLUTTER_HOME=/opt/flutter
 RUN git clone https://github.com/flutter/flutter.git -b stable ${FLUTTER_HOME}
 ENV PATH="${PATH}:${FLUTTER_HOME}/bin"
 
+# Prevent tar from trying to restore original owners when Flutter extracts archives
+# This avoids "Cannot change ownership to uid ..." errors in container builds
+ENV TAR_OPTIONS="--no-same-owner"
+
 # Run flutter doctor to verify installation
 RUN flutter doctor -v
 
