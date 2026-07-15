@@ -5,47 +5,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agent IA pédagogique — statistiques régionales fictives du Sénégal (2020-2024)">
     <title>{% block title %}Agent IA — Statistiques régionales du Sénégal{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        /* ── Variables ─────────────────────────────────────────── */
+        :root {
+            --rouge:        #c0392b;
+            --rouge-doux:   #e57373;
+            --rouge-pale:   #fff5f5;
+            --vert:         #2d6a4f;
+            --vert-doux:    #40916c;
+            --vert-pale:    #f0f7f4;
+            --texte:        #1e2027;
+            --texte-doux:   #4a4e5a;
+            --fond:         #f8f9fb;
+            --blanc:        #ffffff;
+            --ombre:        0 2px 12px rgba(0,0,0,.08);
+            --ombre-lg:     0 6px 28px rgba(0,0,0,.10);
+            --rayon:        10px;
+            --transition:   .25s ease;
+        }
+
+        /* ── Reset & base ──────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: #1a1a1a;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--fond);
+            color: var(--texte);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* ── Bandeau avertissement ─────────────────────────────── */
         .bandeau-avertissement {
-            background-color: #b02a2a;
-            color: #ffffff;
+            background: linear-gradient(90deg, var(--rouge) 0%, var(--rouge-doux) 100%);
+            color: var(--blanc);
             text-align: center;
-            padding: 10px 16px;
-            font-weight: bold;
-            font-size: 0.95rem;
+            padding: 10px 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
+        .bandeau-avertissement span.icone {
+            font-size: 1rem;
+            opacity: .9;
+        }
+
+        /* ── En-tête ───────────────────────────────────────────── */
         header.entete {
-            background-color: #0b3d2e;
-            color: #ffffff;
-            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--vert) 0%, var(--vert-doux) 100%);
+            color: var(--blanc);
+            padding: 28px 32px;
+            box-shadow: var(--ombre-lg);
+            animation: glisserBas .4s ease both;
+        }
+
+        .entete-contenu {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .entete-logo {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
         }
 
         header.entete h1 {
-            margin: 0;
-            font-size: 1.4rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
         }
 
+        header.entete p.sous-titre {
+            font-size: 0.8rem;
+            font-weight: 300;
+            opacity: .75;
+            margin-top: 2px;
+        }
+
+        /* ── Contenu principal ─────────────────────────────────── */
         main {
             max-width: 960px;
-            margin: 24px auto;
-            padding: 0 16px;
+            width: 100%;
+            margin: 36px auto;
+            padding: 0 24px;
+            flex: 1;
+            animation: monterFade .5s ease .1s both;
         }
 
+        /* ── Pied de page ──────────────────────────────────────── */
         footer.pied-de-page {
             text-align: center;
-            padding: 12px;
-            font-size: 0.8rem;
-            color: #555555;
+            padding: 20px 24px;
+            font-size: 0.75rem;
+            color: var(--texte-doux);
+            border-top: 1px solid #e8eaed;
+            background: var(--blanc);
+        }
+
+        footer.pied-de-page strong {
+            color: var(--vert);
+        }
+
+        /* ── Animations ────────────────────────────────────────── */
+        @keyframes glisserBas {
+            from { opacity: 0; transform: translateY(-12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes monterFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Utilitaires carte (réutilisable dans les enfants) ─── */
+        .carte {
+            background: var(--blanc);
+            border-radius: var(--rayon);
+            box-shadow: var(--ombre);
+            padding: 28px;
+            transition: box-shadow var(--transition);
+        }
+        .carte:hover { box-shadow: var(--ombre-lg); }
+
+        /* ── Responsive ────────────────────────────────────────── */
+        @media (max-width: 600px) {
+            header.entete { padding: 20px 16px; }
+            main { padding: 0 12px; }
+            header.entete h1 { font-size: 1.05rem; }
         }
     </style>
     {% block extra_head %}{% endblock %}
@@ -53,13 +167,20 @@
 
 <body>
 
-    <!-- Mention obligatoire du lab : visible sur TOUTES les pages -->
+    <!-- Mention obligatoire visible sur toutes les pages -->
     <div class="bandeau-avertissement">
-        ⚠ Données pédagogiques fictives — aucune donnée officielle
+        <span class="icone">⚠</span>
+        Données pédagogiques fictives — aucune donnée officielle de l'ANSD
     </div>
 
     <header class="entete">
-        <h1>Agent IA de statistiques régionales — Sénégal</h1>
+        <div class="entete-contenu">
+            <div class="entete-logo">🇸🇳</div>
+            <div>
+                <h1>Agent IA — Statistiques régionales du Sénégal</h1>
+                <p class="sous-titre">Période 2020 – 2024 · 14 régions · 9 indicateurs</p>
+            </div>
+        </div>
     </header>
 
     <main>
@@ -67,7 +188,8 @@
     </main>
 
     <footer class="pied-de-page">
-        Projet pédagogique — les chiffres affichés sont fictifs et n'engagent aucune institution.
+        Projet pédagogique — les chiffres affichés sont <strong>fictifs</strong>
+        et n'engagent aucune institution.
     </footer>
 
     {% block extra_scripts %}{% endblock %}
