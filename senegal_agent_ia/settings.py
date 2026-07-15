@@ -84,7 +84,7 @@ ROOT_URLCONF = "senegal_agent_ia.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [str(BASE_DIR / "Templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
