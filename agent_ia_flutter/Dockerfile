@@ -30,7 +30,7 @@ WORKDIR /app
 RUN flutter pub get
 
 # Build the web application
-ARG API_URL=https://votre-api-django.com
+ARG API_URL=https://ai-agent-uqxt.onrender.com
 RUN flutter build web --release --dart-define=API_URL=${API_URL}
 
 # Stage 2: Serve with nginx

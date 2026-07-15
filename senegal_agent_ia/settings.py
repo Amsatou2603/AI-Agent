@@ -39,6 +39,20 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 _ALLOWED_HOSTS_ENV = os.environ.get("ALLOWED_HOSTS", "")
 ALLOWED_HOSTS = [h.strip() for h in _ALLOWED_HOSTS_ENV.split(",") if h.strip()]
 
+# If no ALLOWED_HOSTS provided, include common local hosts
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = [".localhost", "127.0.0.1", "[::1]"]
+
+# If running on Render, add the provided external hostname automatically
+render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME") or os.environ.get("RENDER_SERVICE_ID")
+if render_host:
+    # sometimes Render provides a full hostname or service id; accept both
+    ALLOWED_HOSTS.append(render_host)
+
+# Allow wildcard for onrender.com when explicitly requested via env
+if os.environ.get("ALLOW_ONRENDER_WILDCARD", "False") == "True":
+    ALLOWED_HOSTS.append(".onrender.com")
+
 
 # Application definition
 
