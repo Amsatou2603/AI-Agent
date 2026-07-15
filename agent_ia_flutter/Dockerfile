@@ -19,6 +19,10 @@ ENV FLUTTER_HOME=/opt/flutter
 RUN git clone https://github.com/flutter/flutter.git -b stable ${FLUTTER_HOME}
 ENV PATH="${PATH}:${FLUTTER_HOME}/bin"
 
+# Prevent tar from trying to restore original owners when Flutter extracts archives
+# This avoids "Cannot change ownership to uid ..." errors in container builds
+ENV TAR_OPTIONS="--no-same-owner"
+
 # Run flutter doctor to verify installation
 RUN flutter doctor -v
 
@@ -30,7 +34,7 @@ WORKDIR /app
 RUN flutter pub get
 
 # Build the web application
-ARG API_URL=https://votre-api-django.com
+ARG API_URL=https://ai-agent-uqxt.onrender.com
 RUN flutter build web --release --dart-define=API_URL=${API_URL}
 
 # Stage 2: Serve with nginx

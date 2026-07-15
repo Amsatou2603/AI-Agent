@@ -1,7 +1,11 @@
 {
-  "buildCommand": "flutter build web --release --dart-define=API_URL=https://votre-api-django.com",
+  "buildCommand": "bash -c 'curl -o flutter.tar.xz https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.24.5-stable.tar.xz && tar xf flutter.tar.xz && export PATH=$PATH:$PWD/flutter/bin && flutter doctor && flutter pub get && flutter build web --release --dart-define=API_URL=$API_URL'",
   "outputDirectory": "build/web",
   "framework": null,
-  "installCommand": "if ! command -v flutter &> /dev/null; then git clone https://github.com/flutter/flutter.git -b stable && export PATH=\"$PATH:`pwd`/flutter/bin\"; fi && flutter doctor && flutter pub get",
-  "devCommand": "flutter run -d web-server --web-port=$PORT"
+  "installCommand": "echo 'Skipping install, using build command'",
+  "devCommand": "echo 'Dev mode not supported on Vercel for Flutter'"
+  ,
+  "env": {
+    "API_URL": "https://ai-agent-uqxt.onrender.com"
+  }
 }
