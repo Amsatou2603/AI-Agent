@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Agent IA — Statistiques régionales du Sénégal{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        .bandeau-avertissement {
+            background-color: #b02a2a;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 16px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        header.entete {
+            background-color: #0b3d2e;
+            color: #ffffff;
+            padding: 16px 24px;
+        }
+
+        header.entete h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        main {
+            max-width: 960px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        footer.pied-de-page {
+            text-align: center;
+            padding: 12px;
+            font-size: 0.8rem;
+            color: #555555;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Mention obligatoire du lab : visible sur TOUTES les pages -->
+    <div class="bandeau-avertissement">
+        ⚠ Données pédagogiques fictives — aucune donnée officielle
+    </div>
+
+    <header class="entete">
+        <h1>Agent IA de statistiques régionales — Sénégal</h1>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="pied-de-page">
+        Projet pédagogique — les chiffres affichés sont fictifs et n'engagent aucune institution.
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+
+</html>
