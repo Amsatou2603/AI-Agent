@@ -7,9 +7,9 @@ from django.http import JsonResponse
 # pyrefly: ignore [missing-import]
 from django.shortcuts import render
 # pyrefly: ignore [missing-import]
-from django.views.decorators.csrf import csrf_exempt
-# pyrefly: ignore [missing-import]
 from django.views.decorators.http import require_http_methods
+# pyrefly: ignore [missing-import]
+from django.views.decorators.csrf import csrf_exempt
 
 from .analyseur import analyser_question
 from .moteur import executer_intention
@@ -21,7 +21,7 @@ def accueil(request):
 
 
 @require_http_methods(["POST"])
-@csrf_exempt  # Pour simplifier les tests — en production, utiliser le jeton CSRF
+@csrf_exempt  # CSRF désactivé pour l'API (utilisé par Flutter)
 def api_question(request):
     """
     Endpoint POST /api/question/
