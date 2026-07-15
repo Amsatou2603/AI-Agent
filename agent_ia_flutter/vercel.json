@@ -1,0 +1,7 @@
+{
+  "buildCommand": "flutter build web --release --dart-define=API_URL=https://votre-api-django.com",
+  "outputDirectory": "build/web",
+  "framework": null,
+  "installCommand": "if ! command -v flutter &> /dev/null; then git clone https://github.com/flutter/flutter.git -b stable && export PATH=\"$PATH:`pwd`/flutter/bin\"; fi && flutter doctor && flutter pub get",
+  "devCommand": "flutter run -d web-server --web-port=$PORT"
+}

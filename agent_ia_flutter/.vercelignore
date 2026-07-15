@@ -1,0 +1,23 @@
+# Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+*.swp
+*.swo
+
+# Android/iOS (non nécessaires pour web)
+android/
+ios/
+macos/
+linux/
+windows/

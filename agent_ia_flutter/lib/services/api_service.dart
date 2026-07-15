@@ -4,8 +4,11 @@ import '../models/query_response.dart';
 
 /// Service pour communiquer avec l'API Django
 class ApiService {
-  // À modifier selon ton environnement (local ou déployé)
-  static const String baseUrl = 'http://127.0.0.1:8000';
+  // URL de l'API - à modifier selon l'environnement
+  static const String baseUrl = const String.fromEnvironment(
+    'API_URL',
+    defaultValue: 'http://127.0.0.1:8000',
+  );
   
   /// Envoie une question à l'API et retourne la réponse
   Future<QueryResponse> askQuestion(String question) async {
