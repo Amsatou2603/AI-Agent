@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",  # CORS - doit être en haut
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -142,10 +143,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 # Configuration pour Render - STATIC_ROOT est obligatoire pour collectstatic
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# Use a filesystem path (string) to avoid ImproperlyConfigured during collectstatic
+STATIC_ROOT = str(BASE_DIR / "staticfiles")
+
+# Use WhiteNoise storage backend to serve compressed static files in production
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
