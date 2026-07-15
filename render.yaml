@@ -5,7 +5,7 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       python manage.py migrate --noinput
-      python manage.py importer_statistiques donnees-statistiques-senegal-fictives.csv
+      python manage.py importer_statistiques donnees_statistiques_senegal_fictives.csv
       python manage.py collectstatic --noinput
     startCommand: gunicorn senegal_agent_ia.wsgi:application
     envVars:
