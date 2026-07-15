@@ -1,0 +1,592 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+    /* Zone de conversation */
+    .zone-conversation {
+        background: var(--blanc);
+        border-radius: var(--rayon);
+        box-shadow: var(--ombre);
+        padding: 28px;
+        margin-bottom: 24px;
+        animation: monterFade .5s ease .2s both;
+    }
+
+    .zone-conversation h2 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--vert);
+        margin-bottom: 18px;
+        letter-spacing: -0.01em;
+    }
+
+    /* Formulaire de question */
+    .formulaire-question {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .formulaire-question input[type="text"] {
+        flex: 1;
+        padding: 14px 18px;
+        border: 2px solid #e8eaed;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .formulaire-question input[type="text"]:focus {
+        outline: none;
+        border-color: var(--vert-doux);
+        box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.1);
+    }
+
+    .formulaire-question button {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--vert) 0%, var(--vert-doux) 100%);
+        color: var(--blanc);
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: transform var(--transition), box-shadow var(--transition);
+        font-family: inherit;
+    }
+
+    .formulaire-question button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(45, 106, 79, 0.3);
+    }
+
+    .formulaire-question button:active {
+        transform: translateY(0);
+    }
+
+    .formulaire-question button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Zone de réponse */
+    .zone-reponse {
+        min-height: 120px;
+        padding: 20px;
+        background: var(--vert-pale);
+        border-radius: 8px;
+        border-left: 4px solid var(--vert);
+        display: none;
+        animation: monterFade .4s ease both;
+    }
+
+    .zone-reponse.visible {
+        display: block;
+    }
+
+    .zone-reponse.erreur {
+        background: var(--rouge-pale);
+        border-left-color: var(--rouge);
+    }
+
+    .zone-reponse h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--vert);
+        margin-bottom: 12px;
+    }
+
+    .zone-reponse.erreur h3 {
+        color: var(--rouge);
+    }
+
+    .zone-reponse p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: var(--texte);
+    }
+
+    /* Indicateur de chargement */
+    .chargement {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        padding: 16px;
+        background: var(--fond);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--texte-doux);
+        margin-top: 16px;
+    }
+
+    .chargement.visible {
+        display: flex;
+    }
+
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid #e8eaed;
+        border-top-color: var(--vert);
+        border-radius: 50%;
+        animation: tourner 0.8s linear infinite;
+    }
+
+    @keyframes tourner {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Tableau de données */
+    .zone-tableau {
+        margin-top: 24px;
+        display: none;
+        animation: monterFade .4s ease .1s both;
+    }
+
+    .zone-tableau.visible {
+        display: block;
+    }
+
+    .zone-tableau h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--vert);
+        margin-bottom: 12px;
+    }
+
+    .zone-tableau table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--blanc);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: var(--ombre);
+    }
+
+    .zone-tableau th {
+        background: var(--vert);
+        color: var(--blanc);
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .zone-tableau td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #e8eaed;
+        font-size: 0.9rem;
+    }
+
+    .zone-tableau tr:last-child td {
+        border-bottom: none;
+    }
+
+    .zone-tableau tr:hover td {
+        background: var(--fond);
+    }
+
+    /* Graphique */
+    .zone-graphique {
+        margin-top: 24px;
+        display: none;
+        animation: monterFade .4s ease .2s both;
+    }
+
+    .zone-graphique.visible {
+        display: block;
+    }
+
+    .zone-graphique h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--vert);
+        margin-bottom: 12px;
+    }
+
+    .conteneur-canvas {
+        background: var(--blanc);
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: var(--ombre);
+    }
+
+    /* Exemples de questions */
+    .exemples-questions {
+        background: var(--blanc);
+        border-radius: var(--rayon);
+        box-shadow: var(--ombre);
+        padding: 28px;
+        animation: monterFade .5s ease .3s both;
+    }
+
+    .exemples-questions h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--vert);
+        margin-bottom: 16px;
+    }
+
+    .exemples-questions ul {
+        list-style: none;
+    }
+
+    .exemples-questions li {
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        background: var(--fond);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all var(--transition);
+        border-left: 3px solid transparent;
+    }
+
+    .exemples-questions li:hover {
+        background: var(--vert-pale);
+        border-left-color: var(--vert);
+        transform: translateX(4px);
+    }
+
+    .exemples-questions li::before {
+        content: "💬";
+        margin-right: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .formulaire-question {
+            flex-direction: column;
+        }
+        .formulaire-question button {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="zone-conversation">
+    <h2>Posez votre question</h2>
+    
+    <form class="formulaire-question" id="formulaire-question">
+        <input 
+            type="text" 
+            id="champ-question" 
+            placeholder="Ex : Quel est le taux de chômage à Dakar en 2024 ?"
+            autocomplete="off"
+            required
+        />
+        <button type="submit" id="bouton-envoyer">Envoyer</button>
+    </form>
+
+    <div class="chargement" id="indicateur-chargement">
+        <div class="spinner"></div>
+        <span>Analyse en cours...</span>
+    </div>
+
+    <div class="zone-reponse" id="zone-reponse">
+        <h3>Réponse</h3>
+        <p id="texte-reponse"></p>
+    </div>
+
+    <div class="zone-tableau" id="zone-tableau">
+        <h3>Données</h3>
+        <div id="conteneur-tableau"></div>
+    </div>
+
+    <div class="zone-graphique" id="zone-graphique">
+        <h3>Graphique</h3>
+        <div class="conteneur-canvas">
+            <canvas id="canvas-graphique"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="exemples-questions">
+    <h2>Exemples de questions</h2>
+    <ul>
+        <li data-question="Quel est le taux de chômage à Dakar en 2024 ?">
+            Quel est le taux de chômage à Dakar en 2024 ?
+        </li>
+        <li data-question="Compare l'accès à Internet entre Dakar et Thiès en 2024">
+            Compare l'accès à Internet entre Dakar et Thiès en 2024
+        </li>
+        <li data-question="Évolution de la population à Saint-Louis entre 2020 et 2024">
+            Évolution de la population à Saint-Louis entre 2020 et 2024
+        </li>
+        <li data-question="Classement des régions par taux de scolarisation en 2024">
+            Classement des régions par taux de scolarisation en 2024
+        </li>
+        <li data-question="Moyenne du taux de pauvreté en 2024">
+            Moyenne du taux de pauvreté en 2024
+        </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Références aux éléments DOM
+    const formulaire = document.getElementById('formulaire-question');
+    const champQuestion = document.getElementById('champ-question');
+    const boutonEnvoyer = document.getElementById('bouton-envoyer');
+    const indicateurChargement = document.getElementById('indicateur-chargement');
+    const zoneReponse = document.getElementById('zone-reponse');
+    const texteReponse = document.getElementById('texte-reponse');
+    const zoneTableau = document.getElementById('zone-tableau');
+    const conteneurTableau = document.getElementById('conteneur-tableau');
+    const zoneGraphique = document.getElementById('zone-graphique');
+    const canvasGraphique = document.getElementById('canvas-graphique');
+
+    let graphiqueActuel = null;
+
+    // Soumission du formulaire
+    formulaire.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const question = champQuestion.value.trim();
+        
+        if (!question) {
+            return;
+        }
+
+        await envoyerQuestion(question);
+    });
+
+    // Clic sur un exemple de question
+    document.querySelectorAll('.exemples-questions li').forEach(item => {
+        item.addEventListener('click', () => {
+            const question = item.getAttribute('data-question');
+            champQuestion.value = question;
+            envoyerQuestion(question);
+        });
+    });
+
+    // Fonction principale d'envoi de question
+    async function envoyerQuestion(question) {
+        // Réinitialiser l'interface
+        boutonEnvoyer.disabled = true;
+        indicateurChargement.classList.add('visible');
+        zoneReponse.classList.remove('visible', 'erreur');
+        zoneTableau.classList.remove('visible');
+        zoneGraphique.classList.remove('visible');
+        
+        // Détruire l'ancien graphique
+        if (graphiqueActuel) {
+            graphiqueActuel.destroy();
+            graphiqueActuel = null;
+        }
+
+        try {
+            const reponse = await fetch('/api/question/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question }),
+            });
+
+            const donnees = await reponse.json();
+
+            // Afficher la réponse textuelle
+            texteReponse.textContent = donnees.answer;
+            zoneReponse.classList.add('visible');
+            
+            if (!reponse.ok) {
+                zoneReponse.classList.add('erreur');
+            }
+
+            // Afficher le tableau si présent et non vide
+            if (donnees.table && donnees.table.length > 0) {
+                afficherTableau(donnees.table);
+                zoneTableau.classList.add('visible');
+            }
+
+            // Afficher le graphique si présent
+            if (donnees.chart) {
+                afficherGraphique(donnees.chart);
+                zoneGraphique.classList.add('visible');
+            }
+
+        } catch (erreur) {
+            texteReponse.textContent = `Erreur de connexion : ${erreur.message}`;
+            zoneReponse.classList.add('visible', 'erreur');
+        } finally {
+            boutonEnvoyer.disabled = false;
+            indicateurChargement.classList.remove('visible');
+        }
+    }
+
+    // Afficher un tableau HTML à partir des données
+    function afficherTableau(data) {
+        if (data.length === 0) {
+            conteneurTableau.innerHTML = '<p>Aucune donnée à afficher.</p>';
+            return;
+        }
+
+        const colonnes = Object.keys(data[0]);
+        let html = '<table><thead><tr>';
+        
+        // En-têtes
+        colonnes.forEach(col => {
+            html += `<th>${capitaliser(col)}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+
+        // Lignes de données
+        data.forEach(ligne => {
+            html += '<tr>';
+            colonnes.forEach(col => {
+                html += `<td>${ligne[col]}</td>`;
+            });
+            html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        conteneurTableau.innerHTML = html;
+    }
+
+    // Afficher un graphique Chart.js
+    function afficherGraphique(chartData) {
+        const ctx = canvasGraphique.getContext('2d');
+        
+        // Palette de couleurs style Apple (moderne et élégante)
+        const couleursApple = [
+            { bg: 'rgba(0, 122, 255, 0.8)', border: 'rgba(0, 122, 255, 1)' },      // Bleu Apple
+            { bg: 'rgba(255, 149, 0, 0.8)', border: 'rgba(255, 149, 0, 1)' },      // Orange
+            { bg: 'rgba(52, 199, 89, 0.8)', border: 'rgba(52, 199, 89, 1)' },      // Vert
+            { bg: 'rgba(255, 59, 48, 0.8)', border: 'rgba(255, 59, 48, 1)' },      // Rouge
+            { bg: 'rgba(175, 82, 222, 0.8)', border: 'rgba(175, 82, 222, 1)' },    // Violet
+            { bg: 'rgba(255, 204, 0, 0.8)', border: 'rgba(255, 204, 0, 1)' },      // Jaune
+            { bg: 'rgba(90, 200, 250, 0.8)', border: 'rgba(90, 200, 250, 1)' },    // Cyan
+            { bg: 'rgba(255, 45, 85, 0.8)', border: 'rgba(255, 45, 85, 1)' },      // Rose
+        ];
+        
+        const config = {
+            type: chartData.type,
+            data: {
+                labels: chartData.labels,
+                datasets: chartData.datasets.map((dataset, index) => {
+                    const couleur = couleursApple[index % couleursApple.length];
+                    
+                    if (chartData.type === 'bar') {
+                        return {
+                            label: dataset.label,
+                            data: dataset.data,
+                            backgroundColor: couleur.bg,
+                            borderColor: couleur.border,
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        };
+                    } else if (chartData.type === 'line') {
+                        return {
+                            label: dataset.label,
+                            data: dataset.data,
+                            backgroundColor: couleur.bg.replace('0.8', '0.1'),
+                            borderColor: couleur.border,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: couleur.border,
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointHoverBackgroundColor: couleur.border,
+                            pointHoverBorderColor: '#ffffff',
+                            pointHoverBorderWidth: 3,
+                        };
+                    }
+                    
+                    return {
+                        label: dataset.label,
+                        data: dataset.data,
+                        backgroundColor: couleur.bg,
+                        borderColor: couleur.border,
+                        borderWidth: 2,
+                    };
+                }),
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: "'Inter', system-ui, sans-serif",
+                                size: 13,
+                                weight: '500',
+                            },
+                            color: '#1e2027',
+                            padding: 15,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        titleFont: {
+                            family: "'Inter', system-ui, sans-serif",
+                            size: 13,
+                            weight: '600',
+                        },
+                        bodyFont: {
+                            family: "'Inter', system-ui, sans-serif",
+                            size: 12,
+                        },
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderWidth: 1,
+                    },
+                },
+                scales: chartData.type === 'bar' || chartData.type === 'line' ? {
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Inter', system-ui, sans-serif",
+                                size: 12,
+                            },
+                            color: '#4a4e5a',
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            lineWidth: 1,
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Inter', system-ui, sans-serif",
+                                size: 12,
+                            },
+                            color: '#4a4e5a',
+                        },
+                    },
+                } : {},
+            },
+        };
+
+        graphiqueActuel = new Chart(ctx, config);
+    }
+
+    // Utilitaire : capitaliser la première lettre
+    function capitaliser(texte) {
+        return texte.charAt(0).toUpperCase() + texte.slice(1);
+    }
+</script>
+{% endblock %}
