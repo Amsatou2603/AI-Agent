@@ -159,6 +159,28 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+          // Bouton pour vider l'historique
+          if (_messages.isNotEmpty)
+            Material(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    _messages.clear();
+                  });
+                },
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(
+                    Icons.refresh_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
