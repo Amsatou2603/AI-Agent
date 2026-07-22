@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+{% block title %}Chat IA — Agent IA Sénégal{% endblock %}
+
+{% block extra_head %}
+<style>
+    .ai-message {
+        border-top-left-radius: 4px;
+    }
+    .user-message {
+        border-top-right-radius: 4px;
+    }
+    .chat-bubble-container {
+        animation: fadeIn 0.4s ease-out both;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Chat Container -->
+<div class="flex flex-col min-h-[500px] max-w-3xl mx-auto">
+    <!-- Messages History -->
+    <div id="chat-messages" class="flex-1 space-y-6 pb-28 min-h-[400px]">
+        <!-- Welcome Message from AI -->
+        <div class="flex flex-col items-start chat-bubble-container">
+            <div class="glass-card p-5 rounded-3xl ai-message shadow-sm max-w-[90%] border-primary-fixed-dim/30">
+                <div class="flex items-start gap-3">
+                    <div class="w-6 h-6 bg-primary-container rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-on-primary-container text-xs" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+                    </div>
+                    <div>
+                        <p class="font-body-md text-on-surface leading-relaxed">
+                            Bonjour ! Je suis l'Agent IA du Sénégal. Je peux vous fournir toutes les statistiques officielles sur l'éducation, le chômage, l'accès à internet, la santé et la démographie des 14 régions du pays pour la période 2020-2024.
+                        </p>
+                        <p class="text-xs text-on-surface-variant/80 mt-2 font-medium">Posez-moi des questions comme : "Quel est le chômage à Dakar ?" ou "Compare l'accès à internet entre Kaolack et Fatick en 2022."</p>
+                    </div>
+                </div>
+            </div>
+            <span class="text-[10px] text-on-surface-variant mt-1 ml-2">Agent IA • En ligne</span>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Chat Input -->
+<div class="fixed bottom-20 left-0 w-full px-4 pb-4 bg-gradient-to-t from-background to-transparent z-40 max-w-3xl mx-auto left-1/2 -translate-x-1/2">
+    <div class="bg-surface-container-lowest rounded-full border border-outline-variant/50 shadow-lg flex items-center px-4 py-2 gap-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+        <button class="material-symbols-outlined text-outline hover:text-primary transition-colors p-2 select-none">
+            mic
+        </button>
+        <input id="chat-input" class="flex-1 bg-transparent border-none focus:ring-0 text-body-md py-2 placeholder:text-outline outline-none" 
+               placeholder="Posez votre question sur les statistiques régionales..." type="text"/>
+        <button id="send-button" class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center active:scale-90 transition-transform shadow-md hover:bg-primary-container">
+            <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">send</span>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const chatMessages = document.getElementById("chat-messages");
+        const chatInput = document.getElementById("chat-input");
+        const sendButton = document.getElementById("send-button");
+
+        // Focus ring styling for input container
+        const inputContainer = chatInput.parentElement;
+        chatInput.addEventListener('focus', () => {
+            inputContainer.classList.add('ring-2', 'ring-primary/30');
+        });
+        chatInput.addEventListener('blur', () => {
+            inputContainer.classList.remove('ring-2', 'ring-primary/30');
+        });
+
+        // Auto-scroll to bottom of page
+        function scrollToBottom() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // Add user message to history
+        function appendUserMessage(text) {
+            const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            const html = `
+                <div class="flex flex-col items-end chat-bubble-container">
+                    <div class="bg-primary text-white p-4 rounded-3xl user-message shadow-sm max-w-[85%]">
+                        <p class="font-body-md text-sm">${escapeHtml(text)}</p>
+                    </div>
+                    <span class="text-[10px] text-on-surface-variant mt-1 mr-2">${time}</span>
+                </div>
+            `;
+            chatMessages.insertAdjacentHTML('beforeend', html);
+            scrollToBottom();
+        }
+
+        // Add loading bubble to history
+        function appendLoadingMessage() {
+            const html = `
+                <div id="ai-loading" class="flex flex-col items-start chat-bubble-container">
+                    <div class="glass-card p-5 rounded-3xl ai-message shadow-sm max-w-[90%] border-primary-fixed-dim/30">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 bg-primary-container rounded-full flex items-center justify-center animate-spin">
+                                <span class="material-symbols-outlined text-on-primary-container text-xs">sync</span>
+                            </div>
+                            <p class="font-body-md text-xs italic text-on-surface-variant">L'IA recherche les statistiques dans la base...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatMessages.insertAdjacentHTML('beforeend', html);
+            scrollToBottom();
+        }
+
+        // Remove loading bubble
+        function removeLoadingMessage() {
+            const loading = document.getElementById("ai-loading");
+            if (loading) loading.remove();
+        }
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Add AI response to history
+        function appendAiMessage(data) {
+            const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            
+            let extraHtml = "";
+
+            // Render Chart if present
+            if (data.chart) {
+                extraHtml += `<div class="mt-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 space-y-3">`;
+                
+                // Get labels and datasets
+                const labels = data.chart.labels || [];
+                const dataset = (data.chart.datasets && data.chart.datasets[0]) || { data: [], label: "" };
+                const values = dataset.data || [];
+                
+                // Find max value to scale heights
+                const maxVal = Math.max(...values, 1);
+
+                labels.forEach((label, idx) => {
+                    const val = values[idx] || 0;
+                    // Taux scale check
+                    let widthPercent = (val / maxVal) * 100;
+                    if (data.chart.type === 'bar' && maxVal <= 100) {
+                        widthPercent = val; // Direct percent mapping
+                    }
+                    
+                    extraHtml += `
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="text-on-surface-variant font-medium">${label}</span>
+                                <span class="font-bold text-primary">${val}</span>
+                            </div>
+                            <div class="w-full bg-white rounded-full h-2 overflow-hidden">
+                                <div class="bg-primary h-full rounded-full transition-all duration-1000" style="width: ${widthPercent}%;"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                extraHtml += `</div>`;
+            }
+
+            // Render Table if present and no chart
+            if (data.table && data.table.length > 0 && !data.chart) {
+                extraHtml += `
+                    <div class="mt-4 overflow-x-auto rounded-xl border border-outline-variant/20 shadow-sm">
+                        <table class="w-full text-xs text-left bg-white/50">
+                            <thead class="bg-primary/10 text-primary font-bold">
+                                <tr>
+                `;
+                
+                // Get table headers dynamically from keys
+                const sampleRow = data.table[0];
+                const keys = Object.keys(sampleRow);
+                keys.forEach(key => {
+                    extraHtml += `<th class="p-3 capitalize">${key}</th>`;
+                });
+
+                extraHtml += `
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                data.table.forEach(row => {
+                    extraHtml += `<tr class="border-t border-outline-variant/20 hover:bg-white/40">`;
+                    keys.forEach(key => {
+                        extraHtml += `<td class="p-3 text-on-surface font-medium">${row[key]}</td>`;
+                    });
+                    extraHtml += `</tr>`;
+                });
+
+                extraHtml += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            const html = `
+                <div class="flex flex-col items-start chat-bubble-container">
+                    <div class="glass-card p-5 rounded-3xl ai-message shadow-sm max-w-[90%] border-primary-fixed-dim/30">
+                        <div class="flex items-start gap-3">
+                            <div class="w-6 h-6 bg-primary-container rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="material-symbols-outlined text-on-primary-container text-xs" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+                            </div>
+                            <div class="w-full overflow-hidden">
+                                <p class="font-body-md text-sm text-on-surface leading-relaxed">${data.answer}</p>
+                                ${extraHtml}
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-on-surface-variant mt-1 ml-2">Agent IA • ${time}</span>
+                </div>
+            `;
+            chatMessages.insertAdjacentHTML('beforeend', html);
+            scrollToBottom();
+        }
+
+        // Send query to API
+        function sendQuestion(questionText) {
+            if (!questionText.trim()) return;
+
+            appendUserMessage(questionText);
+            chatInput.value = "";
+            appendLoadingMessage();
+
+            fetch("/api/question/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: questionText })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("Erreur de communication avec le serveur.");
+                }
+                return res.json();
+            })
+            .then(data => {
+                removeLoadingMessage();
+                appendAiMessage(data);
+            })
+            .catch(err => {
+                removeLoadingMessage();
+                appendAiMessage({
+                    answer: "Désolé, je rencontre une difficulté technique pour récupérer ces données : " + err.message,
+                    table: [],
+                    chart: null
+                });
+            });
+        }
+
+        // Send triggers
+        sendButton.addEventListener("click", () => {
+            sendQuestion(chatInput.value);
+        });
+
+        chatInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                sendQuestion(chatInput.value);
+            }
+        });
+
+        // Pre-populate input from URL parameter 'q'
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('q');
+        if (queryParam) {
+            chatInput.value = queryParam;
+            sendQuestion(queryParam);
+            
+            // Clean up the URL address bar
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    });
+</script>
+{% endblock %}

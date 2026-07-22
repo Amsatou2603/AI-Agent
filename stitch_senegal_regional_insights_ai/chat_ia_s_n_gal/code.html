@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Agent IA Sénégal - Chat</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f3f4f5",
+                    "on-tertiary-fixed-variant": "#93000d",
+                    "tertiary-fixed-dim": "#ffb4ac",
+                    "secondary-fixed-dim": "#ebc300",
+                    "surface-bright": "#f8f9fa",
+                    "secondary-container": "#fed41b",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e1e3e4",
+                    "inverse-on-surface": "#f0f1f2",
+                    "primary-fixed-dim": "#70db9d",
+                    "secondary": "#715d00",
+                    "surface-container-high": "#e7e8e9",
+                    "background": "#f8f9fa",
+                    "on-surface-variant": "#3e4a41",
+                    "on-surface": "#191c1d",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e1e3e4",
+                    "tertiary-fixed": "#ffdad6",
+                    "primary-fixed": "#8df8b7",
+                    "tertiary-container": "#e61e25",
+                    "outline-variant": "#bdcabe",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#410002",
+                    "primary": "#006b3f",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#554500",
+                    "secondary-fixed": "#ffe178",
+                    "on-primary-fixed-variant": "#00522f",
+                    "on-secondary-container": "#705b00",
+                    "tertiary": "#bd0014",
+                    "on-primary-fixed": "#002110",
+                    "inverse-primary": "#70db9d",
+                    "outline": "#6e7a70",
+                    "surface-container": "#edeeef",
+                    "inverse-surface": "#2e3132",
+                    "on-background": "#191c1d",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-container": "#fffdff",
+                    "on-primary-container": "#fdfff9",
+                    "surface-tint": "#006d40",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-fixed": "#231b00",
+                    "surface": "#f8f9fa",
+                    "primary-container": "#008751"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-xl": "40px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-md": "16px",
+                    "container-margin": "20px",
+                    "stack-lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm-mobile": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "label-sm-mobile": ["11px", {"lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .ai-message {
+            border-top-left-radius: 4px;
+        }
+        .user-message {
+            border-top-right-radius: 4px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bdcabe;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 z-50 w-full flex justify-between items-center px-gutter h-16 bg-primary shadow-md border-b border-white/10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 flex items-center justify-center bg-white/10">
+<img class="w-full h-full object-cover" data-alt="A macro close-up of the Senegalese national flag with vibrant emerald green, bright yellow, and deep red vertical bands. The central green star is clearly defined against the yellow background. The lighting is soft and cinematic, highlighting the fabric texture, maintaining a premium and professional national identity aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByz-Bkg83nBv8Y4yq4FXp4CRaa9QR1epuGy-hBhUGcqrqdIDok0Iz1ao-_zvryVqUn_177bXz3zRR-v3FvHQkcSXh7qGC8Pm18dgGpZd6KcF81mFvzshoe6Vf9VCTe3EGes-WG9XSakKNKtjZVUR4wnC2x4Ms7QXcgjWc5gUZJUUSqRqCOPujxEwzASXflwFknSqrhn_mb4Rt0wTAn-5_o37eIeRk4UMmFiWoNoZDswl8Y7LgY5DD0tpms34kEis84uEx8ZzlJlYrG"/>
+</div>
+<h1 class="font-headline-sm-mobile text-headline-sm-mobile md:font-headline-sm md:text-headline-sm font-bold text-on-primary">Agent IA Sénégal</h1>
+</div>
+<button class="material-symbols-outlined text-on-primary p-2 rounded-full hover:bg-primary-container/10 transition-all active:scale-95">
+            notifications
+        </button>
+</header>
+<!-- Fictitious Data Warning -->
+<div class="mt-16 bg-tertiary-container/90 backdrop-blur-md text-on-tertiary-container py-2 px-4 text-center text-label-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+        Données pédagogiques fictives — aucune donnée officielle
+    </div>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-container-margin py-stack-lg mb-40">
+<div class="max-w-3xl mx-auto space-y-stack-lg">
+<!-- User Message -->
+<div class="flex flex-col items-end animate-in fade-in slide-in-from-right-4 duration-500">
+<div class="bg-primary text-on-primary p-4 rounded-3xl user-message shadow-sm max-w-[85%]">
+<p class="font-body-md">Quel est le taux de chômage à Dakar en 2024 ?</p>
+</div>
+<span class="text-label-sm text-on-surface-variant mt-1 mr-2">14:20</span>
+</div>
+<!-- AI Message -->
+<div class="flex flex-col items-start animate-in fade-in slide-in-from-left-4 duration-500">
+<div class="glass-card p-5 rounded-3xl ai-message shadow-sm border-primary-fixed-dim/30 max-w-[90%]">
+<div class="flex items-start gap-3 mb-3">
+<div class="w-6 h-6 bg-primary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-[14px]" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<p class="font-body-md text-on-surface leading-relaxed">
+                            Le taux de chômage à Dakar en 2024 est estimé à <span class="font-bold text-primary">12.4%</span>. Cette tendance montre une légère amélioration par rapport à 2020 (14.2%). Voici la répartition régionale comparative :
+                        </p>
+</div>
+<!-- Small Bar Chart -->
+<div class="mt-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30">
+<div class="space-y-3">
+<div class="space-y-1">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Dakar</span>
+<span class="font-bold">12.4%</span>
+</div>
+<div class="w-full bg-white rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full transition-all duration-1000" style="width: 62%;"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Thiès</span>
+<span class="font-bold">15.8%</span>
+</div>
+<div class="w-full bg-white rounded-full h-2 overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full transition-all duration-1000" style="width: 79%;"></div>
+</div>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between text-label-sm">
+<span class="text-on-surface-variant">Saint-Louis</span>
+<span class="font-bold">14.1%</span>
+</div>
+<div class="w-full bg-white rounded-full h-2 overflow-hidden">
+<div class="bg-outline-variant h-full rounded-full transition-all duration-1000" style="width: 70.5%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<span class="text-label-sm text-on-surface-variant mt-1 ml-2">Agent IA • À l'instant</span>
+</div>
+<!-- Empty space for input breathing room -->
+<div class="h-20"></div>
+</div>
+</main>
+<!-- Chat Input Fixed (Above NavBar) -->
+<div class="fixed bottom-20 left-0 w-full px-4 pb-4 bg-gradient-to-t from-background to-transparent pointer-events-none">
+<div class="max-w-3xl mx-auto pointer-events-auto">
+<div class="bg-surface-container-lowest rounded-full border border-outline-variant/50 shadow-lg flex items-center px-4 py-2 gap-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors p-2">
+                    mic
+                </button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-body-md py-2 placeholder:text-outline" placeholder="Posez votre question..." type="text"/>
+<button class="w-10 h-10 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center active:scale-90 transition-transform shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-lowest/80 backdrop-blur-xl border-t border-white/20 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] flex justify-around items-center h-20 px-2 pb-safe">
+<!-- Accueil -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high/50 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm">Accueil</span>
+</a>
+<!-- Stats -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high/50 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm">Stats</span>
+</a>
+<!-- Chat (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-2xl px-4 py-1 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm">Chat</span>
+</a>
+<!-- Profil -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container-high/50 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm">Profil</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for smooth scrolling on message arrival
+        const scrollContainer = document.querySelector('main');
+        const scrollToBottom = () => {
+            scrollContainer.scrollTo({
+                top: scrollContainer.scrollHeight,
+                behavior: 'smooth'
+            });
+        };
+        
+        // Auto-scroll on load
+        window.addEventListener('load', scrollToBottom);
+
+        // Simple placeholder for input logic
+        const input = document.querySelector('input');
+        const sendBtn = document.querySelector('button.bg-primary-container');
+        
+        sendBtn.addEventListener('click', () => {
+            if(input.value.trim() !== '') {
+                // Here we would normally append the message
+                input.value = '';
+            }
+        });
+
+        input.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+    </script>
+</body></html>
