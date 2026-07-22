@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 /// Thème Apple 2026 - Design moderne et épuré
 class AppTheme {
-  // Couleurs principales (Apple 2026)
-  static const Color primary = Color(0xFF007AFF); // Bleu Apple
-  static const Color secondary = Color(0xFF34C759); // Vert
-  static const Color background = Color(0xFFF8F9FB);
+  // Couleurs principales (L'Excellence Numérique)
+  static const Color primary = Color(0xFF008751); // Vert Émeraude Sénégal
+  static const Color secondary = Color(0xFFFBD116); // Or/Jaune Sénégal
+  static const Color background = Color(0xFFF8F9FA);
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color error = Color(0xFFFF3B30);
-  static const Color warning = Color(0xFFFF9500);
+  static const Color error = Color(0xFFE31B23); // Rouge Sénégal
+  static const Color warning = Color(0xFFFBD116);
   
   // Couleurs de texte
   static const Color textPrimary = Color(0xFF1E2027);
@@ -17,12 +17,11 @@ class AppTheme {
   
   // Palette pour graphiques
   static const List<Color> chartColors = [
-    Color(0xFF007AFF), // Bleu
-    Color(0xFFFF9500), // Orange
-    Color(0xFF34C759), // Vert
-    Color(0xFFFF3B30), // Rouge
+    Color(0xFF008751), // Vert
+    Color(0xFFFBD116), // Or
+    Color(0xFFE31B23), // Rouge
+    Color(0xFF40916c), // Vert plus clair
     Color(0xFFAF52DE), // Violet
-    Color(0xFFFFCC00), // Jaune
     Color(0xFF5AC8FA), // Cyan
     Color(0xFFFF2D55), // Rose
   ];
@@ -66,13 +65,13 @@ class AppTheme {
         surface: surface,
         error: error,
         onPrimary: Colors.white,
-        onSecondary: Colors.white,
+        onSecondary: Colors.black,  // Or text needs dark color
         onSurface: textPrimary,
         onError: Colors.white,
       ),
       scaffoldBackgroundColor: background,
-      fontFamily: 'SF Pro',
-      
+      fontFamily: 'Inter',
+
       // AppBar
       appBarTheme: const AppBarTheme(
         backgroundColor: primary,
@@ -84,6 +83,7 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: Colors.white,
           letterSpacing: -0.2,
+          fontFamily: 'Inter',
         ),
       ),
       

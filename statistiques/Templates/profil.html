@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Profil Institutionnel — Agent IA Sénégal{% endblock %}
+
+{% block content %}
+<!-- Header Profile -->
+<section class="mb-8 mt-4 text-center">
+    <div class="w-20 h-20 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center border-4 border-primary/20 shadow-md mx-auto mb-4">
+        <span class="text-4xl">🇸🇳</span>
+    </div>
+    <h2 class="font-display-lg text-2xl font-extrabold text-primary mb-1">Portail Statistique National</h2>
+    <p class="font-body-md text-xs text-on-surface-variant uppercase tracking-wider">République du Sénégal</p>
+</section>
+
+<!-- Settings / Info sections -->
+<div class="space-y-6 max-w-xl mx-auto">
+    <!-- Info Card -->
+    <div class="glass-card rounded-[24px] p-6 shadow-sm border border-outline-variant/30">
+        <h3 class="font-bold text-base text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">info</span>
+            À propos de l'application
+        </h3>
+        <p class="text-sm text-on-surface-variant leading-relaxed">
+            Cette application est un projet de recherche et développement (Lab) simulant un **Agent IA de Statistiques Régionales**. Il permet d'interroger la base de données via le langage naturel de manière fiable et sécurisée.
+        </p>
+    </div>
+
+    <!-- Indicator definitions -->
+    <div class="glass-card rounded-[24px] p-6 shadow-sm border border-outline-variant/30">
+        <h3 class="font-bold text-base text-primary mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">database</span>
+            Indicateurs disponibles (2020 - 2024)
+        </h3>
+        <ul class="space-y-2.5 text-xs text-on-surface-variant">
+            <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                <span><strong>Démographie :</strong> Population totale estimée par région.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                <span><strong>Éducation :</strong> Taux de scolarisation (%) et taux d'alphabétisation (%).</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                <span><strong>Économie & Emploi :</strong> Taux de chômage (%) et taux de pauvreté (%).</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                <span><strong>Technologies :</strong> Taux d'accès à Internet (%).</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                <span><strong>Santé :</strong> Nombre de centres de santé régionaux.</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                <span><strong>Agriculture :</strong> Production céréalière annuelle (tonnes).</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Security/NLU validation Card -->
+    <div class="glass-card rounded-[24px] p-6 shadow-sm border border-outline-variant/30 bg-primary/5">
+        <h3 class="font-bold text-base text-primary mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">security</span>
+            Sécurité & Traitement local
+        </h3>
+        <p class="text-xs text-on-surface-variant leading-relaxed mb-3">
+            L'analyseur NLU fonctionne de manière déterministe ou via un appel LLM asynchrone sécurisé. Aucun nom de champ libre n'est injecté dans les requêtes SQL, ce qui prévient toute tentative d'injection.
+        </p>
+        <span class="inline-flex bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+            Sécurité validée
+        </span>
+    </div>
+</div>
+{% endblock %}

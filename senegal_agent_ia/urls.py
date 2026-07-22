@@ -20,10 +20,14 @@ from django.contrib import admin
 # pyrefly: ignore [missing-import]
 from django.urls import path
 
-from statistiques.views import accueil, api_question
+from statistiques.views import accueil, api_question, dashboard, regions, chat, profil
 
 urlpatterns = [
     path("", accueil, name="accueil"),
+    path("dashboard/", dashboard, name="dashboard"),
+    path("regions/", regions, name="regions"),
+    path("chat/", chat, name="chat"),
+    path("profil/", profil, name="profil"),
     path("api/question/", api_question, name="api_question"),
     path("admin/", admin.site.urls),
 ]

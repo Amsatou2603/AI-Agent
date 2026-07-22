@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Statistiques Régionales — Agent IA Sénégal{% endblock %}
+
+{% block content %}
+<!-- Welcome Header -->
+<section class="mb-6 mt-4">
+    <h2 class="font-display-lg text-2xl md:text-3xl font-extrabold text-primary mb-1">Statistiques Régionales</h2>
+    <p class="font-body-md text-sm text-on-surface-variant">Explorez les indicateurs clés des 14 régions du Sénégal pour l'année 2024.</p>
+</section>
+
+<!-- Search Bar -->
+<section class="relative mb-8">
+    <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+        <span class="material-symbols-outlined text-outline">search</span>
+    </div>
+    <input id="region-search" class="w-full h-14 pl-12 pr-4 rounded-2xl border-none ring-1 ring-outline/20 focus:ring-2 focus:ring-primary bg-white shadow-sm transition-all text-body-md" 
+           placeholder="Rechercher une région (Dakar, Thiès, Ziguinchor...)" type="text"/>
+</section>
+
+<!-- Region Grid -->
+<section id="regions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {% for item in regions_data %}
+    <div class="region-card glass-card rounded-[24px] overflow-hidden shadow-sm hover:shadow-lg transition-all group border border-outline-variant/30" 
+         data-region="{{ item.region|lower }}">
+        <!-- Header Image area -->
+        <div class="h-32 w-full overflow-hidden relative bg-cover bg-center transition-transform duration-700 header-img"
+             data-region-name="{{ item.region }}"
+             style="background-color: #008751;">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            {% if item.region == "Dakar" %}
+            <div class="absolute bottom-3 left-4">
+                <span class="px-2 py-0.5 bg-primary text-white text-[10px] font-bold rounded uppercase tracking-wider">Capitale</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="p-5">
+            <h3 class="font-headline-sm text-lg font-bold text-on-surface mb-4">{{ item.region }}</h3>
+            
+            <div class="space-y-3 text-sm">
+                <!-- Population -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px]">groups</span>
+                        <span>Population</span>
+                    </div>
+                    <!-- Formatted population in Millions -->
+                    <span class="font-bold text-primary">
+                        {{ item.population|floatformat:0 }}
+                    </span>
+                </div>
+                
+                <!-- Scolarisation -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px]">school</span>
+                        <span>Scolarisation</span>
+                    </div>
+                    <span class="font-bold text-secondary">
+                        {{ item.taux_scolarisation_pct }}%
+                    </span>
+                </div>
+
+                <!-- Chomage -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px]">work</span>
+                        <span>Chômage</span>
+                    </div>
+                    <span class="font-bold text-on-surface">
+                        {{ item.taux_chomage_pct }}%
+                    </span>
+                </div>
+
+                <!-- Access internet -->
+                <div class="flex items-center justify-between border-t border-dashed border-outline-variant/30 pt-2 mt-2">
+                    <div class="flex items-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-[18px]">language</span>
+                        <span>Accès Internet</span>
+                    </div>
+                    <span class="font-bold text-on-surface-variant">
+                        {{ item.acces_internet_pct }}%
+                    </span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <a href="{% url 'chat' %}?q=Donne-moi+les+d%C3%A9tails+statistiques+de+la+r%C3%A9gion+de+{{ item.region }}" 
+               class="w-full mt-4 bg-primary/10 text-primary hover:bg-primary hover:text-white py-2 rounded-xl text-center block font-semibold text-xs transition-colors">
+                Poser une question sur {{ item.region }}
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-12">
+        <span class="material-symbols-outlined text-4xl opacity-30 mb-2">database</span>
+        <p class="text-on-surface-variant">Aucune donnée disponible. Veuillez effectuer les migrations ou charger les données.</p>
+    </div>
+    {% endfor %}
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Search filter logic
+        const searchInput = document.getElementById("region-search");
+        const cards = document.querySelectorAll(".region-card");
+
+        searchInput.addEventListener("input", function (e) {
+            const term = e.target.value.toLowerCase().trim();
+            cards.forEach(card => {
+                const regionName = card.getAttribute("data-region");
+                if (regionName.includes(term)) {
+                    card.style.display = "block";
+                    card.style.opacity = "1";
+                } else {
+                    card.style.opacity = "0";
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        // Set high fidelity background images dynamically
+        const imageMap = {
+            "Dakar": "https://lh3.googleusercontent.com/aida-public/AB6AXuB2178CTqsfVQGuVD7IHN4ltUmcraQfihH1IIiNpiB1YXmMjJfI4DupDp_G0i5T1ZK2Y6LBwD-CKTV9kkR3k_-uFMMHkvYE-mStgpL_rWHQAu60wi-n09sbQqawoLfAQvr0jEpMi08_qPJl2wKVelsP7vsvQesPKTWFKTUGkk6f6-W5YfAtWQkVeIdytC3NXujqqyNeW7bgHChbdhK9PL3OQiPcwuVIjwIR7Ta-WuMgM3x0pPjNDkuUhIG6B6coll1zeQAGJpyzVLHm",
+            "Thiès": "https://lh3.googleusercontent.com/aida-public/AB6AXuAYchd_4F__WAg6HIm41d18lkdpIHm86dNTOCvqOuRTPKaSnz2xjnHe1lVqszCw7G1lL27Son-uO6szc6TliTMfQEKVj9W5MzEMdbk5M5eJKzFsWGpwE7w4NGhJxMd0KQrKx878pHgf6ZPoxJfJzgpIlcHO80o8dN94rywN1VIQAuRUKiwkVbpGN0oT1YVAXOtVcxOT46hQ1oB1NjD_THvnvMR5EN1oMV3zl-zYiqXmwjFYepUpqjgDS0MlIrhyVXI1B01vzcCjLUT-",
+            "Saint-Louis": "https://lh3.googleusercontent.com/aida-public/AB6AXuB3T7tKTbHPyW95G79vRVh_cOYMv60SuMLotEkuBcRSyDgTDLJpYEkl_Mx4AnFUoHydFNRcWtFFdg9AQ9-aUVD5jcCuP9hVezHozlS6Je3sWzR-7x4wM_bSg2KE-uHzTEz2ESEnJZhkpyNA0OG1gvCN-b1Blk-GjG3MwSX0JhDXDUSBaWEeZ_5mQRhOsWxBGbsfsQYSJQfEXi6PxAvwhRQUYG6AxVAPPatjSlHoOIIfG0Fr6cr50lEDJVM-CT7jV9JFXwfZDXGBl-97",
+            "Ziguinchor": "https://lh3.googleusercontent.com/aida-public/AB6AXuA40z6sCGaScQCm9xM95ZkRtfQuGR5YpYU8Q6o8-dTvx-oAtzwBkj2jgOVfJxmNdl78ic2DhN45a4vu8cGlv_NEZWMW4el-M1WJC2NOjk_Zy07phjrPguhdTh5ag5eq-xFesewFsKQOPin8QdwelxX5nXvt84q6exKM-7V-YpbtkP1G5dTq5_8bJrUsctpV51hq44Szq1wfFJ6vflES64wftRPdtGvERtC9dNkIWfTCciK4UYnTxnmF61x7j3Junsnp5o0t_T1EuH0D",
+            "Diourbel": "https://lh3.googleusercontent.com/aida-public/AB6AXuDHHtI6yBx3GtfQY-p2Ijk9AOLx0gS4dpr4d0zum7T0BlDVluA951nZ4T3hRSvHlGISVobTbrWAb1lqfAZRK0h6CahAWxc_DtW3igmr5apBsE4qTJLTf7YYYDFdEVQXIoNfFEJDXszNpoQGub_MijrFNfVjpyfFOMCDvMWSGBBIF_ToThgle2tqIzdRAAiUx12uYmpl-e8LDlvZ64hfPL69ISBmRJUl3Rx0O8IKmJ-MBv5RwLuHCcZXu_naD6USFIy84s4qBoWh_lUG",
+            "Kaolack": "https://lh3.googleusercontent.com/aida-public/AB6AXuAExSUK4SFhUxH6Cb5-NghPSdeCbCQXPPGasrzrqGdG5Lu_8H6j16d4ANC4BS5IcSRE_pmFyI-H6fdfSLIRSuWOWM-Ug-2V399X3TzSuvJjomUVWz2YKNT5nrrUzBM9gV8fijxMWWpqS11N5xHnDUCeobNuklox2tZOS_WRQHhDwUPDcZSb0V6XLzYJQBlYB6sZe2Paugb0Z9zvvUjhWVZQJVUilVEG4PzbY2L-RGuwf84Y_hmA7CqjGP5EBHzDTBNdiuuKFn25Duzh",
+            "Tambacounda": "https://lh3.googleusercontent.com/aida-public/AB6AXuAXuXtNOE4PwtILkUTNmNRK_R42X1qSDFYWUEjm-x27NGcj5cpWDXWDVDT05NnsOpA4wGweoYc6XbShPde9QKPrUNIY0PV8bQp0sbplTfGgNlNP7NXCsK7nfm3wAFtKCRJmTsSMUk7x1d76nsDttG94nkOCXfoys0EStzU8B85MJmpjhvEJUciLfzoeZfn9Kpc1sthItCMQYyskTPmJBgnEipRgdFmUxjR96i6gasP606-WG7WHQc5Y_wyuZja6upeXpIoPs0Xbxits",
+            "Louga": "https://lh3.googleusercontent.com/aida-public/AB6AXuDphJbW21RIuXyhbk4_Ba-XNpr-XrkMfWnOxtx_hS7uYvRPVtbVYqMWTQopC5lHdTs7vjysz-5cNfVxVtaRPu4nrZiJfHlyUruBgmBSGeAOpRaa1J73keB4Zt3R8Z799EfR_Xv_8d79gRwm9GVABSTwYbZMd32sRzwxc0RfclHdWK6Nwgj9N15FvkBcEEbE0F4mliXSVa_W4Zu6agahLiR-5IELzo7qpFkihvSUHzxNhV4IOcWHhYPY2OZQMZUBgfS3ISVKZcEQOjR4"
+        };
+
+        const imageContainers = document.querySelectorAll(".header-img");
+        imageContainers.forEach(container => {
+            const name = container.getAttribute("data-region-name");
+            if (imageMap[name]) {
+                container.style.backgroundImage = `url('${imageMap[name]}')`;
+            } else {
+                // Generates random color gradient for other regions
+                const gradients = [
+                    "linear-gradient(135deg, #008751 0%, #40916c 100%)",
+                    "linear-gradient(135deg, #2d6a4f 0%, #52b788 100%)",
+                    "linear-gradient(135deg, #1b4332 0%, #40916c 100%)"
+                ];
+                const index = name.charCodeAt(0) % gradients.length;
+                container.style.background = gradients[index];
+            }
+        });
+    });
+</script>
+{% endblock %}

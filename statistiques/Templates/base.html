@@ -1,197 +1,224 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="fr">
+<html lang="fr" class="light">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Agent IA pédagogique — statistiques régionales fictives du Sénégal (2020-2024)">
     <title>{% block title %}Agent IA — Statistiques régionales du Sénégal{% endblock %}</title>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        try {
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        "colors": {
+                            "surface-container-low": "#f3f4f5",
+                            "on-tertiary-fixed-variant": "#93000d",
+                            "tertiary-fixed-dim": "#ffb4ac",
+                            "secondary-fixed-dim": "#ebc300",
+                            "surface-bright": "#f8f9fa",
+                            "secondary-container": "#fed41b",
+                            "error": "#ba1a1a",
+                            "surface-container-lowest": "#ffffff",
+                            "error-container": "#ffdad6",
+                            "surface-container-highest": "#e1e3e4",
+                            "inverse-on-surface": "#f0f1f2",
+                            "primary-fixed-dim": "#70db9d",
+                            "secondary": "#715d00",
+                            "surface-container-high": "#e7e8e9",
+                            "background": "#f8f9fa",
+                            "on-surface-variant": "#3e4a41",
+                            "on-surface": "#191c1d",
+                            "on-primary": "#ffffff",
+                            "surface-variant": "#e1e3e4",
+                            "tertiary-fixed": "#ffdad6",
+                            "primary-fixed": "#8df8b7",
+                            "tertiary-container": "#e61e25",
+                            "outline-variant": "#bdcabe",
+                            "on-error": "#ffffff",
+                            "on-tertiary-fixed": "#410002",
+                            "primary": "#006b3f",
+                            "on-secondary": "#ffffff",
+                            "on-secondary-fixed-variant": "#554500",
+                            "secondary-fixed": "#ffe178",
+                            "on-primary-fixed-variant": "#00522f",
+                            "on-secondary-container": "#705b00",
+                            "tertiary": "#bd0014",
+                            "on-primary-fixed": "#002110",
+                            "inverse-primary": "#70db9d",
+                            "outline": "#6e7a70",
+                            "surface-container": "#edeeef",
+                            "inverse-surface": "#2e3132",
+                            "on-background": "#191c1d",
+                            "on-error-container": "#93000a",
+                            "on-tertiary": "#ffffff",
+                            "on-tertiary-container": "#fffdff",
+                            "on-primary-container": "#fdfff9",
+                            "surface-tint": "#006d40",
+                            "surface-dim": "#d9dadb",
+                            "on-secondary-fixed": "#231b00",
+                            "surface": "#f8f9fa",
+                            "primary-container": "#008751"
+                        },
+                        "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "stack-xl": "40px",
+                            "gutter": "16px",
+                            "stack-sm": "8px",
+                            "stack-md": "16px",
+                            "container-margin": "20px",
+                            "stack-lg": "24px"
+                        },
+                        "fontFamily": {
+                            "headline-sm": ["Inter"],
+                            "label-sm": ["Inter"],
+                            "label-md": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "headline-lg": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "display-lg": ["Inter"],
+                            "body-md": ["Inter"]
+                        },
+                        "fontSize": {
+                            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                            "headline-sm-mobile": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                            "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                            "label-sm-mobile": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                            "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                            "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                            "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                        }
+                    },
+                },
+            }
+        } catch (_e) { }
+    </script>
 
     <style>
-        /* ── Variables ─────────────────────────────────────────── */
-        :root {
-            --rouge:        #c0392b;
-            --rouge-doux:   #e57373;
-            --rouge-pale:   #fff5f5;
-            --vert:         #2d6a4f;
-            --vert-doux:    #40916c;
-            --vert-pale:    #f0f7f4;
-            --texte:        #1e2027;
-            --texte-doux:   #4a4e5a;
-            --fond:         #f8f9fb;
-            --blanc:        #ffffff;
-            --ombre:        0 2px 12px rgba(0,0,0,.08);
-            --ombre-lg:     0 6px 28px rgba(0,0,0,.10);
-            --rayon:        10px;
-            --transition:   .25s ease;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
-
-        /* ── Reset & base ──────────────────────────────────────── */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: var(--fond);
-            color: var(--texte);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            background-color: #f8f9fa;
         }
 
-        /* ── Bandeau avertissement ─────────────────────────────── */
-        .bandeau-avertissement {
-            background: linear-gradient(90deg, var(--rouge) 0%, var(--rouge-doux) 100%);
-            color: var(--blanc);
-            text-align: center;
-            padding: 10px 20px;
-            font-size: 0.82rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
         }
 
-        .bandeau-avertissement span.icone {
-            font-size: 1rem;
-            opacity: .9;
-        }
-
-        /* ── En-tête ───────────────────────────────────────────── */
-        header.entete {
-            background: linear-gradient(135deg, var(--vert) 0%, var(--vert-doux) 100%);
-            color: var(--blanc);
-            padding: 28px 32px;
-            box-shadow: var(--ombre-lg);
-            animation: glisserBas .4s ease both;
-        }
-
-        .entete-contenu {
-            max-width: 960px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .entete-logo {
-            width: 44px;
-            height: 44px;
-            background: rgba(255,255,255,.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            flex-shrink: 0;
-        }
-
-        header.entete h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            line-height: 1.3;
-        }
-
-        header.entete p.sous-titre {
-            font-size: 0.8rem;
-            font-weight: 300;
-            opacity: .75;
-            margin-top: 2px;
-        }
-
-        /* ── Contenu principal ─────────────────────────────────── */
-        main {
-            max-width: 960px;
-            width: 100%;
-            margin: 36px auto;
-            padding: 0 24px;
-            flex: 1;
-            animation: monterFade .5s ease .1s both;
-        }
-
-        /* ── Pied de page ──────────────────────────────────────── */
-        footer.pied-de-page {
-            text-align: center;
-            padding: 20px 24px;
-            font-size: 0.75rem;
-            color: var(--texte-doux);
-            border-top: 1px solid #e8eaed;
-            background: var(--blanc);
-        }
-
-        footer.pied-de-page strong {
-            color: var(--vert);
-        }
-
-        /* ── Animations ────────────────────────────────────────── */
-        @keyframes glisserBas {
-            from { opacity: 0; transform: translateY(-12px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes monterFade {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ── Utilitaires carte (réutilisable dans les enfants) ─── */
-        .carte {
-            background: var(--blanc);
-            border-radius: var(--rayon);
-            box-shadow: var(--ombre);
-            padding: 28px;
-            transition: box-shadow var(--transition);
-        }
-        .carte:hover { box-shadow: var(--ombre-lg); }
-
-        /* ── Responsive ────────────────────────────────────────── */
-        @media (max-width: 600px) {
-            header.entete { padding: 20px 16px; }
-            main { padding: 0 12px; }
-            header.entete h1 { font-size: 1.05rem; }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
 
-<body>
+<body class="min-h-screen bg-background text-on-surface flex flex-col pb-28">
 
-    <!-- Mention obligatoire visible sur toutes les pages -->
-    <div class="bandeau-avertissement">
-        <span class="icone">⚠</span>
-        Données pédagogiques fictives — aucune donnée officielle de l'ANSD
-    </div>
-
-    <header class="entete">
-        <div class="entete-contenu">
-            <div class="entete-logo">🇸🇳</div>
-            <div>
-                <h1>Agent IA — Statistiques régionales du Sénégal</h1>
-                <p class="sous-titre">Période 2020 – 2024 · 14 régions · 9 indicateurs</p>
+    <!-- TopAppBar -->
+    <header class="bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container fixed top-0 w-full shadow-md border-b border-white/10 dark:border-on-primary-container/10 flex justify-between items-center px-gutter h-16 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full overflow-hidden bg-white/20 flex items-center justify-center border border-white/30">
+                <span class="text-xl">🇸🇳</span>
             </div>
+            <h1 class="font-headline-sm-mobile text-headline-sm-mobile md:font-headline-sm md:text-headline-sm font-bold text-white">Agent IA Sénégal</h1>
         </div>
+        <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary-container/10 dark:hover:bg-primary/10 transition-all active:scale-98">
+            <span class="material-symbols-outlined text-white">notifications</span>
+        </button>
     </header>
 
-    <main>
+    <!-- Warning Banner -->
+    <div class="bg-tertiary text-on-tertiary py-2 px-4 flex items-center justify-center gap-2 text-center text-xs font-medium fixed top-16 w-full z-40 shadow-sm">
+        <span class="material-symbols-outlined text-sm">warning</span>
+        Données pédagogiques fictives — aucune donnée officielle
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 mt-28 px-container-margin py-stack-lg max-w-4xl w-full mx-auto">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="pied-de-page">
-        Projet pédagogique — les chiffres affichés sont <strong>fictifs</strong>
-        et n'engagent aucune institution.
+    <!-- BottomNavBar -->
+    <nav class="bg-surface-container-lowest/80 dark:bg-surface-container-low/80 fixed bottom-0 w-full z-50 rounded-t-xl backdrop-blur-xl border-t border-white/20 dark:border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] flex justify-around items-center h-20 px-2 pb-safe">
+        <!-- Accueil -->
+        <a id="nav-accueil" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-high/50 transition-colors active:scale-90 duration-150" href="{% url 'accueil' %}">
+            <span class="material-symbols-outlined">home</span>
+            <span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm mt-0.5">Accueil</span>
+        </a>
+        <!-- Stats -->
+        <a id="nav-stats" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-high/50 transition-colors active:scale-90 duration-150" href="{% url 'dashboard' %}">
+            <span class="material-symbols-outlined">bar_chart</span>
+            <span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm mt-0.5">Stats</span>
+        </a>
+        <!-- Chat -->
+        <a id="nav-chat" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-high/50 transition-colors active:scale-90 duration-150" href="{% url 'chat' %}">
+            <span class="material-symbols-outlined">chat_bubble</span>
+            <span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm mt-0.5">Chat</span>
+        </a>
+        <!-- Profil -->
+        <a id="nav-profil" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-4 py-1 hover:bg-surface-container-high/50 transition-colors active:scale-90 duration-150" href="{% url 'profil' %}">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-label-sm-mobile text-label-sm-mobile md:font-label-sm md:text-label-sm mt-0.5">Profil</span>
+        </a>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-on-surface-variant/60 border-t border-outline-variant/20 bg-surface-container-lowest mt-12 mb-16">
+        Projet pédagogique — les chiffres affichés sont fictifs et n'engagent aucune institution.
     </footer>
 
+    <!-- Active Link Highlighting Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const path = window.location.pathname;
+            let activeId = "nav-accueil";
+
+            if (path.includes("/dashboard/")) {
+                activeId = "nav-stats";
+            } else if (path.includes("/chat/")) {
+                activeId = "nav-chat";
+            } else if (path.includes("/profil/")) {
+                activeId = "nav-profil";
+            } else if (path.includes("/regions/")) {
+                activeId = "nav-accueil"; // Regions est une sous-partie de l'accueil ou stats, on le rattache à l'accueil
+            }
+
+            const activeLink = document.getElementById(activeId);
+            if (activeLink) {
+                activeLink.className = "flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-2xl px-4 py-1 active:scale-90 transition-transform duration-150";
+                const icon = activeLink.querySelector(".material-symbols-outlined");
+                if (icon) {
+                    icon.style.fontVariationSettings = '"FILL" 1';
+                }
+            }
+        });
+    </script>
     {% block extra_scripts %}{% endblock %}
 </body>
 

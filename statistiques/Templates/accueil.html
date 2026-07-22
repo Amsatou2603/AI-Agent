@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Accueil — Agent IA Sénégal{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Splash Screen Overlay */
+    #splash-screen {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #006b3f 0%, #008751 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+    }
+
+    #splash-screen.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    /* Pulse effect on flag container */
+    .pulse-logo {
+        animation: pulseLogo 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseLogo {
+        0%, 100% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.08); opacity: 1; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Splash Screen Overlay -->
+<div id="splash-screen">
+    <div class="flex flex-col items-center max-w-sm px-6 text-center">
+        <div class="w-24 h-24 rounded-full overflow-hidden bg-white/20 flex items-center justify-center border-4 border-white/30 shadow-lg pulse-logo mb-6">
+            <span class="text-5xl">🇸🇳</span>
+        </div>
+        <h1 class="text-3xl font-extrabold text-white tracking-tight mb-2">Agent IA Sénégal</h1>
+        <p class="text-white/80 font-light text-sm uppercase tracking-widest mb-8">Portail National Analytics</p>
+        
+        <!-- Premium Gold Progress bar loader -->
+        <div class="w-48 bg-white/10 rounded-full h-1.5 overflow-hidden mb-3">
+            <div class="bg-secondary-container h-full rounded-full animate-[progress_2s_ease-in-out_infinite]" style="width: 100%;"></div>
+        </div>
+        <p class="text-white/60 text-xs italic">Chargement sécurisé des données...</p>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<section class="mb-stack-xl text-center md:text-left mt-4">
+    <div class="mb-4 flex justify-center md:justify-start">
+        <div class="w-16 h-16 rounded-2xl bg-primary-container/10 flex items-center justify-center animate-pulse">
+            <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+        </div>
+    </div>
+    <h2 class="font-display-lg text-2xl md:text-3xl lg:text-4xl text-on-surface mb-2 tracking-tight">Bonjour, comment puis-je vous aider aujourd'hui ?</h2>
+    <p class="font-body-lg text-base text-on-surface-variant">Interrogez les statistiques régionales du Sénégal en langage naturel.</p>
+</section>
+
+<!-- Quick Stats Grid (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-stack-md mb-stack-xl">
+    <!-- Card 1 -->
+    <div class="glass-card p-stack-md rounded-xl flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+        <div class="flex justify-between items-start mb-4">
+            <span class="p-2 bg-primary/10 text-primary rounded-lg material-symbols-outlined">groups</span>
+            <span class="text-xs font-bold text-primary uppercase tracking-widest">+2.7%</span>
+        </div>
+        <div>
+            <p class="text-on-surface-variant text-label-md mb-1">Population Totale (2024)</p>
+            <p class="font-headline-lg text-2xl font-bold text-on-surface">{{ pop_totale }}</p>
+        </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="glass-card p-stack-md rounded-xl flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+        <div class="flex justify-between items-start mb-4">
+            <span class="p-2 bg-secondary-container/20 text-secondary rounded-lg material-symbols-outlined">trending_up</span>
+            <span class="text-xs font-bold text-secondary uppercase tracking-widest">Est. 2024</span>
+        </div>
+        <div>
+            <p class="text-on-surface-variant text-label-md mb-1">Croissance du PIB</p>
+            <p class="font-headline-lg text-2xl font-bold text-on-surface">{{ croissance_pib }}</p>
+        </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="glass-card p-stack-md rounded-xl flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+        <div class="flex justify-between items-start mb-4">
+            <span class="p-2 bg-tertiary/10 text-tertiary rounded-lg material-symbols-outlined">school</span>
+        </div>
+        <div>
+            <p class="text-on-surface-variant text-label-md mb-1">Scolarisation Moyenne (2024)</p>
+            <p class="font-headline-lg text-2xl font-bold text-on-surface">{{ tx_scolarisation }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Example Questions -->
+<section class="mb-6">
+    <div class="flex items-center gap-2 mb-stack-md">
+        <span class="w-1.5 h-6 bg-primary rounded-full"></span>
+        <h3 class="font-headline-sm text-lg font-bold text-primary">Exemples de questions</h3>
+    </div>
+    <div class="space-y-stack-md">
+        <!-- Question Card 1 -->
+        <a href="{% url 'chat' %}?q=Quel+est+le+taux+de+ch%C3%B4mage+%C3%A0+Dakar+en+2024+%3F" class="w-full glass-card group flex items-center gap-4 p-5 rounded-2xl text-left hover:bg-primary-container/5 transition-all duration-200 border-l-4 border-l-transparent hover:border-l-primary active:scale-[0.99] block shadow-sm">
+            <div class="p-3 bg-primary-container/10 rounded-xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                <span class="material-symbols-outlined block">query_stats</span>
+            </div>
+            <div class="flex-1">
+                <p class="font-body-md text-on-surface group-hover:text-primary transition-colors">Quel est le taux de chômage à Dakar en 2024 ?</p>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+        </a>
+        <!-- Question Card 2 -->
+        <a href="{% url 'chat' %}?q=Compare+l%27acc%C3%A8s+%C3%A0+Internet+entre+Dakar+et+Thi%C3%A8s+en+2024" class="w-full glass-card group flex items-center gap-4 p-5 rounded-2xl text-left hover:bg-primary-container/5 transition-all duration-200 border-l-4 border-l-transparent hover:border-l-primary active:scale-[0.99] block shadow-sm">
+            <div class="p-3 bg-primary-container/10 rounded-xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                <span class="material-symbols-outlined block">compare_arrows</span>
+            </div>
+            <div class="flex-1">
+                <p class="font-body-md text-on-surface group-hover:text-primary transition-colors">Compare l'accès à Internet entre Dakar et Thiès en 2024</p>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+        </a>
+        <!-- Question Card 3 -->
+        <a href="{% url 'chat' %}?q=%C3%89volution+de+la+population+%C3%A0+Saint-Louis+entre+2020+et+2024" class="w-full glass-card group flex items-center gap-4 p-5 rounded-2xl text-left hover:bg-primary-container/5 transition-all duration-200 border-l-4 border-l-transparent hover:border-l-primary active:scale-[0.99] block shadow-sm">
+            <div class="p-3 bg-primary-container/10 rounded-xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                <span class="material-symbols-outlined block">history_edu</span>
+            </div>
+            <div class="flex-1">
+                <p class="font-body-md text-on-surface group-hover:text-primary transition-colors">Évolution de la population à Saint-Louis entre 2020 et 2024</p>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+        </a>
+        <!-- Question Card 4 -->
+        <a href="{% url 'chat' %}?q=Classement+des+r%C3%A9gions+par+taux+de+scolarisation+en+2024" class="w-full glass-card group flex items-center gap-4 p-5 rounded-2xl text-left hover:bg-primary-container/5 transition-all duration-200 border-l-4 border-l-transparent hover:border-l-primary active:scale-[0.99] block shadow-sm">
+            <div class="p-3 bg-primary-container/10 rounded-xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+                <span class="material-symbols-outlined block">format_list_numbered</span>
+            </div>
+            <div class="flex-1">
+                <p class="font-body-md text-on-surface group-hover:text-primary transition-colors">Classement des régions par taux de scolarisation en 2024</p>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant/40 group-hover:translate-x-1 transition-transform">chevron_right</span>
+        </a>
+    </div>
+</section>
+
+<!-- Shortcut to Regions List -->
+<section class="mt-8">
+    <div class="glass-card rounded-[24px] p-6 border border-outline-variant/30 flex justify-between items-center bg-gradient-to-r from-white to-primary/5 shadow-sm">
+        <div>
+            <h4 class="font-bold text-on-surface mb-1">Explorer par région</h4>
+            <p class="text-sm text-on-surface-variant">Accédez directement aux fiches détaillées des 14 régions du Sénégal.</p>
+        </div>
+        <a href="{% url 'regions' %}" class="bg-primary text-white rounded-full p-3 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-md">
+            <span class="material-symbols-outlined">map</span>
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const splash = document.getElementById("splash-screen");
+        
+        // Use sessionStorage so the splash screen only displays once per browser session
+        if (sessionStorage.getItem("splash-shown") === "true") {
+            splash.style.display = "none";
+        } else {
+            setTimeout(function () {
+                splash.classList.add("fade-out");
+                sessionStorage.setItem("splash-shown", "true");
+            }, 1800);
+        }
+    });
+</script>
+{% endblock %}

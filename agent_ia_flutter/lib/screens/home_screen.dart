@@ -5,7 +5,9 @@ import '../theme/app_theme.dart';
 import '../widgets/chat_message_widget.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String? initialQuestion;
+
+  const HomeScreen({super.key, this.initialQuestion});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -26,6 +28,26 @@ class _HomeScreenState extends State<HomeScreen> {
     "Classement des régions par taux de scolarisation en 2024",
     "Moyenne du taux de pauvreté en 2024",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialQuestion != null && widget.initialQuestion!.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _askQuestion(widget.initialQuestion!);
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialQuestion != null &&
+        widget.initialQuestion != oldWidget.initialQuestion &&
+        widget.initialQuestion!.isNotEmpty) {
+      _askQuestion(widget.initialQuestion!);
+    }
+  }
 
   @override
   void dispose() {
